@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Benonardo <benonardo@icloud.com>
+Date: Fri, 22 Oct 2021 21:32:03 +0200
+Subject: [PATCH] Removed timeout
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 029c21d9416520469548293f9a2ec0c056507d05..577bcf3fb67d19ed267878ac311e22e1bd8a9396 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -361,7 +361,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+         if (this.keepAlivePending) {
+             if (!this.processedDisconnect && elapsedTime >= KEEPALIVE_LIMIT) { // check keepalive limit, don't fire if already disconnected
+                 ServerGamePacketListenerImpl.LOGGER.warn("{} was kicked due to keepalive timeout!", this.player.getScoreboardName()); // more info
+-                this.disconnect(new TranslatableComponent("disconnect.timeout", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // Paper - kick event cause
++                //this.disconnect(new TranslatableComponent("disconnect.timeout", new Object[0]), org.bukkit.event.player.PlayerKickEvent.Cause.TIMEOUT); // BenPlane - dont kick players with weak connection // Paper - kick event cause
+             }
+         } else {
+             if (elapsedTime >= 15000L) { // 15 seconds
