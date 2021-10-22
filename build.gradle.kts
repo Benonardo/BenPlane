@@ -15,13 +15,14 @@ allprojects {
             languageVersion.set(JavaLanguageVersion.of(16))
         }
     }
+
+    tasks.withType<JavaCompile> {
+        options.isFork = true; options.isIncremental = true; options.encoding =
+        Charsets.UTF_8.name(); options.release.set(16)
+    }
 }
 
 subprojects {
-    tasks.withType<JavaCompile> {
-        options.encoding = Charsets.UTF_8.name()
-        options.release.set(16)
-    }
 
     tasks.withType<Javadoc> {
         options.encoding = Charsets.UTF_8.name()
@@ -39,7 +40,9 @@ subprojects {
         maven("https://repo.aikar.co/content/groups/aikar")
         maven("https://repo.md-5.net/content/repositories/releases/")
         maven("https://hub.spigotmc.org/nexus/content/groups/public/")
+        maven("https://nexus.velocitypowered.com/repository/velocity-artifacts-snapshots/")
         maven("https://jitpack.io")
+        maven("https://libraries.minecraft.net")
     }
 }
 
@@ -47,6 +50,9 @@ repositories {
     mavenCentral()
     maven("https://papermc.io/repo/repository/maven-public/") {
         content { onlyForConfigurations("paperclip") }
+    }
+    maven("https://maven.quiltmc.org/repository/release/") {
+        content { onlyForConfigurations("remapper") }
     }
 }
 
