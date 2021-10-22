@@ -7,4 +7,4 @@ pluginManagement {
 }
 
 rootProject.name = "BenPlane"
-include("BenPlane-API", "BenPlane-Server")
+include("BenPlane-API", "BenPlane-Server", "Airplane-API")
