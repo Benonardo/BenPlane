@@ -4,18 +4,18 @@
 set -e
 
 # The root directory for the project
-ROOT_DIR="$(dirname $0)/.."
+ROOT_DIR="$(dirname "$0")/.."
 echo "Project root directory detected as $ROOT_DIR."
 
 # Extract the github organisation and repository from the gradle buildscript
-ORGANISATION=$(cat build.gradle.kts | grep 'set(github' | awk -F '"' '{ print $2}')
-REPOSITORY=$(cat build.gradle.kts | grep 'set(github' | awk -F '"' '{ print $4}')
+ORGANISATION=$(< build.gradle.kts grep 'set(github' | awk -F '"' '{ print $2}')
+REPOSITORY=$(< build.gradle.kts grep 'set(github' | awk -F '"' '{ print $4}')
 
 # Query the default branch from the github api if none has been set
 BRANCH=${1:-$(curl -s "https://api.github.com/repos/$ORGANISATION/$REPOSITORY" | jq -r .default_branch)}
 
 # Extract the current gradle property from the buildscript
-GRADLE_PROPERTY=$(cat build.gradle.kts | grep gradleProperty | awk -F '\"' '{ print $2}')
+GRADLE_PROPERTY=$(< build.gradle.kts grep gradleProperty | awk -F '\"' '{ print $2}')
 
 # Print out the information which will be used for updating to the runner.
 echo "Will be updating property $GRADLE_PROPERTY from repository $ORGANISATION/$REPOSITORY in branch $BRANCH."
