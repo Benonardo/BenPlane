@@ -1,3 +1,3 @@
 # BenPlane
 
-The best serversoftware ever.
+The best server software ever.
