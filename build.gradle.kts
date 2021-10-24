@@ -64,12 +64,12 @@ dependencies {
 paperweight {
     serverProject.set(project(":BenPlane-Server"))
 
-    useStandardUpstream("airplane") {
-        url.set(github("TECHNOVE", "Airplane"))
-        ref.set(providers.gradleProperty("airplaneRef"))
+    useStandardUpstream("purpur") {
+        url.set(github("pl3xgaming", "Purpur"))
+        ref.set(providers.gradleProperty("purpurRef"))
 
         withStandardPatcher {
-            baseName("Airplane")
+            baseName("Purpur")
 
             remapRepo.set("https://maven.fabricmc.net/")
             decompileRepo.set("https://files.minecraftforge.net/maven/")

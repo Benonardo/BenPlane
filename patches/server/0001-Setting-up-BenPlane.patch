@@ -1,0 +1,141 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Benonardo <benonardo@icloud.com>
+Date: Sun, 24 Oct 2021 19:41:02 +0200
+Subject: [PATCH] Setting up BenPlane
+
+
+diff --git a/build.gradle.kts b/build.gradle.kts
+index dc6c416bb2145bb684e1dedda626263d423cba67..895f71f54fd3fc9bdb7e16080d011c22bff24826 100644
+--- a/build.gradle.kts
++++ b/build.gradle.kts
+@@ -25,7 +25,7 @@ repositories {
+ }
+ 
+ dependencies {
+-    implementation(project(":Purpur-API")) // Airplane // Purpur
++    implementation(project(":BenPlane-API")) // BenPlane // Airplane // Purpur
+     implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
+     // Paper start
+     implementation("org.jline:jline-terminal-jansi:3.12.1")
+@@ -87,7 +87,7 @@ tasks.jar {
+         attributes(
+             "Main-Class" to "org.bukkit.craftbukkit.Main",
+             "Implementation-Title" to "CraftBukkit",
+-            "Implementation-Version" to "git-Purpur-$implementationVersion", // Airplane // Purpur
++            "Implementation-Version" to "git-BenPlane-$implementationVersion", // BenPlane // Airplane // Purpur
+             "Implementation-Vendor" to date, // Paper
+             "Specification-Title" to "Bukkit",
+             "Specification-Version" to project.version,
+diff --git a/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java b/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java
+new file mode 100644
+index 0000000000000000000000000000000000000000..c00eccc54ce2d68d45910a369251321687ec8661
+--- /dev/null
++++ b/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java
+@@ -0,0 +1,15 @@
++package com.benonardo.benplane;
++
++import org.apache.logging.log4j.LogManager;
++import org.apache.logging.log4j.Logger;
++
++public class BenPlaneEntryPoint {
++
++    public static Logger logger = LogManager.getLogger("BenPlane");
++
++    public static void start() {
++
++        logger.info("BenPlane started");
++
++    }
++}
+diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
+index 05f1b6d103ec20f196b60944f5bc007384c449f1..94462ca1906ad6c73bedfef11ef99356d75ab8c0 100644
+--- a/src/main/java/com/destroystokyo/paper/Metrics.java
++++ b/src/main/java/com/destroystokyo/paper/Metrics.java
+@@ -593,7 +593,7 @@ public class Metrics {
+             boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
+             // Only start Metrics, if it's enabled in the config
+             if (config.getBoolean("enabled", true)) {
+-                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Airplane // Purpur
++                Metrics metrics = new Metrics("BenPlane", serverUUID, logFailedRequests, Bukkit.getLogger()); // BenPlane // Airplane // Purpur
+                 metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
+                     String minecraftVersion = Bukkit.getVersion();
+                     minecraftVersion = minecraftVersion.substring(minecraftVersion.indexOf("MC: ") + 4, minecraftVersion.length() - 1);
+@@ -602,7 +602,7 @@ public class Metrics {
+ 
+                 metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : (PaperConfig.isProxyOnlineMode() ? "bungee" : "offline"))); // Purpur
+-                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Airplane // Purpur
++                metrics.addCustomChart(new Metrics.SimplePie("benplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // BenPlane // Airplane // Purpur
+ 
+                 metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
+                     Map<String, Map<String, Integer>> map = new HashMap<>();
+diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+index aadd6550a5892e403f7b0bbef008461c1566a1bb..68339b6f7a7d52fe9edf0db4082188b5637c8bd9 100644
+--- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
++++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -31,8 +31,8 @@ public class PaperVersionFetcher implements VersionFetcher {
+     @Nonnull
+     @Override
+     public Component getVersionMessage(@Nonnull String serverVersion) {
+-        String[] parts = serverVersion.substring("git-Purpur-".length()).split("[-\\s]"); // Airplane // Purpur
+-        final Component updateMessage = getUpdateStatusMessage("pl3xgaming/Purpur", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
++        String[] parts = serverVersion.substring("git-BenPlane-".length()).split("[-\\s]"); // Airplane // Purpur
++        final Component updateMessage = getUpdateStatusMessage("Benonardo/BenPlane", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
+         final Component history = getHistory();
+ 
+         return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
+diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+index 8c3c68465197fafc14849dc38a572e309931e2a2..4049dd5edeb8099284a8a4792f7a64589628ee96 100644
+--- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
++++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
+@@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
+     @Override
+     protected LineReader buildReader(LineReaderBuilder builder) {
+         builder
+-                .appName("Purpur") // Purpur
++                .appName("BenPlane") // Purpur
+                 .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
+                 .completer(new ConsoleCommandCompleter(this.server))
+                 .option(LineReader.Option.COMPLETE_IN_WORD, true);
+diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
+index f415108a98fdb0c4e1c569452e387c3defa4211f..0287236ab5cfc8cb7352c5afa4b8c5037d87e9f7 100644
+--- a/src/main/java/net/minecraft/server/MinecraftServer.java
++++ b/src/main/java/net/minecraft/server/MinecraftServer.java
+@@ -1,5 +1,6 @@
+ package net.minecraft.server;
+ 
++import com.benonardo.benplane.BenPlaneEntryPoint;
+ import com.google.common.base.Splitter;
+ import com.google.common.collect.ImmutableList;
+ import co.aikar.timings.Timings;
+@@ -476,6 +477,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+         */
+         // Paper end
+         Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
++
++        BenPlaneEntryPoint.start(); // BenPlane
+     }
+     // CraftBukkit end
+ 
+@@ -1751,7 +1754,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+ 
+     @DontObfuscate
+     public String getServerModName() {
+-        return net.pl3x.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "BenPlane"; // BenPlane - BenPlane // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+     }
+ 
+     public SystemReport fillSystemReport(SystemReport details) {
+diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+index bb9aff9f3067b6249447287f5d9f9c6fe86c88d5..f57214a583ead947431cfdd2b90bfb9ae67fa6b2 100644
+--- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
++++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
+@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
+ import javax.annotation.Nonnull; // Paper
+ 
+ public final class CraftServer implements Server {
+-    private final String serverName = "Purpur"; // Paper // Airplane // Purpur
++    private final String serverName = "BenPlane"; // BenPlane // Paper // Airplane // Purpur
+     private final String serverVersion;
+     private final String bukkitVersion = Versioning.getBukkitVersion();
+     private final Logger logger = Logger.getLogger("Minecraft");
