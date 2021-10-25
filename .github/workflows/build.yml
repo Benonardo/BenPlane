@@ -50,6 +50,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: build/libs/BenPlane-1.17.1-R0.1-SNAPSHOT.jar
-          tag: ${{ github.ref }}
+          tag: Release 1.17.1-R0.1-SNAPSHOT
           asset_name: BenPlane.jar
           overwrite: true
