@@ -1,0 +1,19 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Benonardo <benonardo@icloud.com>
+Date: Fri, 24 Dec 2021 10:08:47 +0100
+Subject: [PATCH] Delayed keepalive timeout
+
+
+diff --git a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+index 5027ce254ce1a04a9ddfd22c315520a92008175f..3f3483b988d5fe5dc7b343daae06fc43c14f20f4 100644
+--- a/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
++++ b/src/main/java/net/minecraft/server/network/ServerGamePacketListenerImpl.java
+@@ -258,7 +258,7 @@ public class ServerGamePacketListenerImpl implements ServerPlayerConnection, Ser
+     private int receivedMovePacketCount;
+     private int knownMovePacketCount;
+     private static final int MAX_SIGN_LINE_LENGTH = Integer.getInteger("Paper.maxSignLength", 80);
+-    private static final long KEEPALIVE_LIMIT = Long.getLong("paper.playerconnection.keepalive", 30) * 1000; // Paper - provide property to set keepalive limit
++    private static final long KEEPALIVE_LIMIT = Long.getLong("paper.playerconnection.keepalive", 60) * 1000; // BenPlane - increase the standard keepalive limit // Paper - provide property to set keepalive limit
+ 
+     private String clientBrandName = null; // Paper - Brand name
+ 

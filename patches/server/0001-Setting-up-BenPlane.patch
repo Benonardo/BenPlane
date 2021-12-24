@@ -1,141 +1,140 @@
 From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Benonardo <benonardo@icloud.com>
-Date: Sun, 24 Oct 2021 19:41:02 +0200
+Date: Fri, 24 Dec 2021 10:05:55 +0100
 Subject: [PATCH] Setting up BenPlane
 
 
 diff --git a/build.gradle.kts b/build.gradle.kts
-index dc6c416bb2145bb684e1dedda626263d423cba67..895f71f54fd3fc9bdb7e16080d011c22bff24826 100644
+index 4330a2ed507f408c7b2c278985ab354406baa55a..67336273115c32362fff20db3b77b88f2eb9ad24 100644
 --- a/build.gradle.kts
 +++ b/build.gradle.kts
-@@ -25,7 +25,7 @@ repositories {
+@@ -18,7 +18,7 @@ repositories {
  }
  
  dependencies {
--    implementation(project(":Purpur-API")) // Airplane // Purpur
-+    implementation(project(":BenPlane-API")) // BenPlane // Airplane // Purpur
-     implementation("io.papermc.paper:paper-mojangapi:1.17.1-R0.1-SNAPSHOT") // Airplane
-     // Paper start
-     implementation("org.jline:jline-terminal-jansi:3.12.1")
-@@ -87,7 +87,7 @@ tasks.jar {
+-    implementation(project(":CloudPlane-API")) // CloudPlane // Pufferfish // Paper
++    implementation(project(":BenPlane-API")) // BenPlane // CloudPlane // Pufferfish // Paper
+     // Pufferfish start
+     implementation("io.papermc.paper:paper-mojangapi:1.18.1-R0.1-SNAPSHOT") {
+         exclude("io.papermc.paper", "paper-api")
+@@ -80,7 +80,7 @@ tasks.jar {
          attributes(
              "Main-Class" to "org.bukkit.craftbukkit.Main",
              "Implementation-Title" to "CraftBukkit",
--            "Implementation-Version" to "git-Purpur-$implementationVersion", // Airplane // Purpur
-+            "Implementation-Version" to "git-BenPlane-$implementationVersion", // BenPlane // Airplane // Purpur
+-            "Implementation-Version" to "git-CloudPlane-$implementationVersion", // Pufferfish // CloudPlane
++            "Implementation-Version" to "git-BenPlane-$implementationVersion", // Pufferfish // CloudPlane // BenPlane
              "Implementation-Vendor" to date, // Paper
              "Specification-Title" to "Bukkit",
              "Specification-Version" to project.version,
 diff --git a/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java b/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java
 new file mode 100644
-index 0000000000000000000000000000000000000000..c00eccc54ce2d68d45910a369251321687ec8661
+index 0000000000000000000000000000000000000000..641a55adcf4c88984d02949b73cc6fd2e327eac7
 --- /dev/null
 +++ b/src/main/java/com/benonardo/benplane/BenPlaneEntryPoint.java
-@@ -0,0 +1,15 @@
+@@ -0,0 +1,13 @@
 +package com.benonardo.benplane;
 +
 +import org.apache.logging.log4j.LogManager;
 +import org.apache.logging.log4j.Logger;
 +
-+public class BenPlaneEntryPoint {
++public final class BenPlaneEntryPoint {
 +
-+    public static Logger logger = LogManager.getLogger("BenPlane");
++    public static final Logger LOGGER = LogManager.getLogger("BenPlane");
 +
 +    public static void start() {
-+
-+        logger.info("BenPlane started");
-+
++        LOGGER.info("BenPlane started");
 +    }
 +}
 diff --git a/src/main/java/com/destroystokyo/paper/Metrics.java b/src/main/java/com/destroystokyo/paper/Metrics.java
-index 05f1b6d103ec20f196b60944f5bc007384c449f1..94462ca1906ad6c73bedfef11ef99356d75ab8c0 100644
+index c5f3d465b40525d2e8c8c8bab1c204e286877683..3959161ccf6fe418347394233bd14685877394eb 100644
 --- a/src/main/java/com/destroystokyo/paper/Metrics.java
 +++ b/src/main/java/com/destroystokyo/paper/Metrics.java
 @@ -593,7 +593,7 @@ public class Metrics {
              boolean logFailedRequests = config.getBoolean("logFailedRequests", false);
              // Only start Metrics, if it's enabled in the config
              if (config.getBoolean("enabled", true)) {
--                Metrics metrics = new Metrics("Purpur", serverUUID, logFailedRequests, Bukkit.getLogger()); // Airplane // Purpur
-+                Metrics metrics = new Metrics("BenPlane", serverUUID, logFailedRequests, Bukkit.getLogger()); // BenPlane // Airplane // Purpur
+-                Metrics metrics = new Metrics("CloudPlane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish // CloudPlane
++                Metrics metrics = new Metrics("BenPlane", serverUUID, logFailedRequests, Bukkit.getLogger()); // Pufferfish // CloudPlane // BenPlane
+ 
                  metrics.addCustomChart(new Metrics.SimplePie("minecraft_version", () -> {
                      String minecraftVersion = Bukkit.getVersion();
-                     minecraftVersion = minecraftVersion.substring(minecraftVersion.indexOf("MC: ") + 4, minecraftVersion.length() - 1);
-@@ -602,7 +602,7 @@ public class Metrics {
+@@ -603,7 +603,7 @@ public class Metrics {
  
                  metrics.addCustomChart(new Metrics.SingleLineChart("players", () -> Bukkit.getOnlinePlayers().size()));
-                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : (PaperConfig.isProxyOnlineMode() ? "bungee" : "offline"))); // Purpur
--                metrics.addCustomChart(new Metrics.SimplePie("purpur_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // Airplane // Purpur
-+                metrics.addCustomChart(new Metrics.SimplePie("benplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // BenPlane // Airplane // Purpur
+                 metrics.addCustomChart(new Metrics.SimplePie("online_mode", () -> Bukkit.getOnlineMode() ? "online" : "offline"));
+-                metrics.addCustomChart(new Metrics.SimplePie("cloudplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // CloudPlane
++                metrics.addCustomChart(new Metrics.SimplePie("benplane_version", () -> (Metrics.class.getPackage().getImplementationVersion() != null) ? Metrics.class.getPackage().getImplementationVersion() : "unknown")); // BenPlane // CloudPlane
  
                  metrics.addCustomChart(new Metrics.DrilldownPie("java_version", () -> {
                      Map<String, Map<String, Integer>> map = new HashMap<>();
 diff --git a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
-index aadd6550a5892e403f7b0bbef008461c1566a1bb..68339b6f7a7d52fe9edf0db4082188b5637c8bd9 100644
+index d81697a54abf664fb0d714185036d099159852c9..9c5b3181d15251011d03b1ec1a175a98e279aad0 100644
 --- a/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
 +++ b/src/main/java/com/destroystokyo/paper/PaperVersionFetcher.java
+@@ -20,7 +20,7 @@ import java.util.stream.StreamSupport;
+ public class PaperVersionFetcher implements VersionFetcher {
+     private static final java.util.regex.Pattern VER_PATTERN = java.util.regex.Pattern.compile("^([0-9\\.]*)\\-.*R"); // R is an anchor, will always give '-R' at end
+     private static final String GITHUB_BRANCH_NAME = "master";
+-    private static final String DOWNLOAD_PAGE = "https://github.com/CloudCraftProjects/CloudPlane/actions/"; // CloudPlane
++    private static final String DOWNLOAD_PAGE = "https://github.com/Benonardo/BenPlane/actions/"; // BenPlane // CloudPlane
+     private static @Nullable String mcVer;
+ 
+     @Override
 @@ -31,8 +31,8 @@ public class PaperVersionFetcher implements VersionFetcher {
      @Nonnull
      @Override
      public Component getVersionMessage(@Nonnull String serverVersion) {
--        String[] parts = serverVersion.substring("git-Purpur-".length()).split("[-\\s]"); // Airplane // Purpur
--        final Component updateMessage = getUpdateStatusMessage("pl3xgaming/Purpur", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
-+        String[] parts = serverVersion.substring("git-BenPlane-".length()).split("[-\\s]"); // Airplane // Purpur
-+        final Component updateMessage = getUpdateStatusMessage("Benonardo/BenPlane", "ver/" + getMinecraftVersion(), parts[0]); // Airplane // Purpur
+-        String[] parts = serverVersion.substring("git-CloudPlane-".length()).split("[-\\s]"); // CloudPlane
+-        final Component updateMessage = getUpdateStatusMessage("CloudCraftProjects/CloudPlane", GITHUB_BRANCH_NAME, parts[0]); // CloudPlane
++        String[] parts = serverVersion.substring("git-BenPlane-".length()).split("[-\\s]"); // BenPlane // CloudPlane
++        final Component updateMessage = getUpdateStatusMessage("Benonardo/BenPlane", GITHUB_BRANCH_NAME, parts[0]); // BenPlane // CloudPlane
          final Component history = getHistory();
  
          return history != null ? TextComponent.ofChildren(updateMessage, Component.newline(), history) : updateMessage;
 diff --git a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
-index 8c3c68465197fafc14849dc38a572e309931e2a2..4049dd5edeb8099284a8a4792f7a64589628ee96 100644
+index e0b1f0671d16ddddcb6725acd25a1d1d69e42701..ee60de8f9fe09895a844f2d0ccc1bbdde605759d 100644
 --- a/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 +++ b/src/main/java/com/destroystokyo/paper/console/PaperConsole.java
 @@ -17,7 +17,7 @@ public final class PaperConsole extends SimpleTerminalConsole {
      @Override
      protected LineReader buildReader(LineReaderBuilder builder) {
          builder
--                .appName("Purpur") // Purpur
-+                .appName("BenPlane") // Purpur
+-                .appName("Paper")
++                .appName("BenPlane") // BenPlane
                  .variable(LineReader.HISTORY_FILE, java.nio.file.Paths.get(".console_history"))
                  .completer(new ConsoleCommandCompleter(this.server))
                  .option(LineReader.Option.COMPLETE_IN_WORD, true);
 diff --git a/src/main/java/net/minecraft/server/MinecraftServer.java b/src/main/java/net/minecraft/server/MinecraftServer.java
-index f415108a98fdb0c4e1c569452e387c3defa4211f..0287236ab5cfc8cb7352c5afa4b8c5037d87e9f7 100644
+index 59e40772cf5cc4a3e25ec752abae40aeeaa6ab46..cb411dd25c23c8d406ccc4e270856dce10e23cef 100644
 --- a/src/main/java/net/minecraft/server/MinecraftServer.java
 +++ b/src/main/java/net/minecraft/server/MinecraftServer.java
-@@ -1,5 +1,6 @@
- package net.minecraft.server;
- 
-+import com.benonardo.benplane.BenPlaneEntryPoint;
- import com.google.common.base.Splitter;
- import com.google.common.collect.ImmutableList;
- import co.aikar.timings.Timings;
-@@ -476,6 +477,8 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -478,6 +478,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
          */
          // Paper end
          Runtime.getRuntime().addShutdownHook(new org.bukkit.craftbukkit.util.ServerShutdownThread(this));
-+
-+        BenPlaneEntryPoint.start(); // BenPlane
++        com.benonardo.benplane.BenPlaneEntryPoint.start(); // BenPlane
      }
      // CraftBukkit end
  
-@@ -1751,7 +1754,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
+@@ -1714,7 +1715,7 @@ public abstract class MinecraftServer extends ReentrantBlockableEventLoop<TickTa
  
      @DontObfuscate
      public String getServerModName() {
--        return net.pl3x.purpur.PurpurConfig.serverModName; // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
-+        return "BenPlane"; // BenPlane - BenPlane // Purpur - Purpur > // Airplane // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
+-        return "CloudPlane"; // CloudPlane - CloudPlane > // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
++        return "BenPlane"; // BenPlane - BenPlane > // CloudPlane - CloudPlane > // Pufferfish - Pufferfish > // Paper - Paper > // Spigot - Spigot > // CraftBukkit - cb > vanilla!
      }
  
      public SystemReport fillSystemReport(SystemReport details) {
 diff --git a/src/main/java/org/bukkit/craftbukkit/CraftServer.java b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-index bb9aff9f3067b6249447287f5d9f9c6fe86c88d5..f57214a583ead947431cfdd2b90bfb9ae67fa6b2 100644
+index 754531d47c86c4db4bddbbc8294db7a8f77e2f5a..db046191696ec4de3c4a57f75ca2e2a9604123b7 100644
 --- a/src/main/java/org/bukkit/craftbukkit/CraftServer.java
 +++ b/src/main/java/org/bukkit/craftbukkit/CraftServer.java
-@@ -251,7 +251,7 @@ import javax.annotation.Nullable; // Paper
+@@ -253,7 +253,7 @@ import javax.annotation.Nullable; // Paper
  import javax.annotation.Nonnull; // Paper
  
  public final class CraftServer implements Server {
--    private final String serverName = "Purpur"; // Paper // Airplane // Purpur
-+    private final String serverName = "BenPlane"; // BenPlane // Paper // Airplane // Purpur
-     private final String serverVersion;
+-    private final String serverName = "CloudPlane"; // Paper // Pufferfish // CloudPlane
++    private final String serverName = "BenPlane"; // Paper // Pufferfish // CloudPlane // BenPlane
+     public final String serverVersion; // CloudPlane - private --> public
      private final String bukkitVersion = Versioning.getBukkitVersion();
      private final Logger logger = Logger.getLogger("Minecraft");
