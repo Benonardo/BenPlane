@@ -10,4 +10,6 @@ The best server software ever, includes code from:
 * SpigotMC
 * PaperMC
 * Airplane
-* Purpur
+* Pufferfish
+* CloudPlane
+* Me
